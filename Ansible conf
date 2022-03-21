@@ -1,0 +1,57 @@
+
+ON ANSIBLE SERVER NODE
+
+#wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+#yum install epel-release-latest-7.noarch.rpm
+#yum update -y
+#yum install git python python-level python-pip openssl ansible -y
+#vi /etc/ansible/hosts
+Ex 1: Ungrouped hosts, specify before any group headers.
+[demo]
+172.x.x.x
+172.x.x.x
+:wq
+#vi /etc/ansible/ansible.cfg (Remove #)
+inventory      = /etc/ansible/hosts
+sudo_user      = root
+
+On server Node $ Client Node
+
+#adduser ansible
+#passwd ansible
+#visudo (make ansible as root user)
+
+## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+ansible ALL=(ALL) NOPASSWD: ALL (ADD THIS LINE)
+:wq
+#su -ansible
+
+#vi /etc/ssh/sshd_config (On server Node and client node as root user)
+
+# Authentication:
+
+#LoginGraceTime 2m
+PermitRootLogin yes  (remove #)
+#StrictModes yes
+
+
+To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication yes (remove #)
+#PermitEmptyPasswords no
+#PasswordAuthentication no (put #)
+
+:wq
+
+Now loging as ansible user on both node
+#su - ansible
+
+go to ansible server
+su - ansible
+ssh 172.x.x.x (asking passwd for login)
+#ssh-keygen
+#cd .ssh/
+#ssh-copy-id ansible@172.x.x.x (node public ip)
+
+
+
