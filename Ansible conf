@@ -54,4 +54,73 @@ ssh 172.x.x.x (asking passwd for login)
 #ssh-copy-id ansible@172.x.x.x (node public ip)
 
 
+Ansible playbooks
 
+#vi target.yml
+--- # my fisrst twating yaml playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  gather_facts: yes
+:wq
+#ansible-playbook target.yml
+
+#vi task.yml
+--- # my task playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install HTTPD on linux
+      action: yum name=httpd state=installed
+:wq
+#ansible-playbook task.yml
+
+#vi var.yml
+--- # my var playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  vars:
+     pkgname: httpd
+  tasks:
+    - name: install httpd
+      action: yum name='{{pkgname}}' state=installed
+:wq
+#ansible-playbook var.yml
+
+#vi handlers.yml
+--- # my handlers playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install httpd
+      action: yum name=httpd state=installed
+      notify: restart httpd
+  handlers:
+    - name: restart httpd
+      action: service name=httpd state=restarted
+
+:wq
+
+#ansible-playbook handlers.yml
+
+
+#vi loop.yml
+--- # loop playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: add list of user
+      user: name='{{item}}' state=present
+      with_items:
+        - deepak
+        - rahul
+:wq
