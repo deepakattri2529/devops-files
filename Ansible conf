@@ -124,3 +124,40 @@ Ansible playbooks
         - deepak
         - rahul
 :wq
+
+
+#vi condition.yml
+--- # my condition playboom
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install apache server on debian
+      command: apt-get -y install apache2
+      when: ansible_os_family == "Debian"
+    - name: install apache server on redhat
+      command: yum -y install httpd
+      when: ansible_os_family == "RedHat"
+:wq
+
+Roles playbook
+
+
+#mkdir -p playbook/roles/webserver/tasks
+#cd playbook/
+#touch roles/webserver/tasks/main.yml
+- name: install on RedHat
+  yum: pkg=httpd state=latest
+:wq
+
+#touch master.yml
+--- # master playbook for webserver
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  roles:
+    - webserver
+:wq
+
