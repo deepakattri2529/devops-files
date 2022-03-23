@@ -1,0 +1,46 @@
+cd /opt/
+
+sudo amazon-linux-extras install java-openjdk11 -y
+
+sudo wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.60/bin/apache-tomcat-9.0.60.tar.gz
+
+tar -xvzf apache-tomcat-9.0.60.tar.gz
+
+mv apache-tomcat-9.0.60 tomcat
+
+cd tomcat/
+
+cd bin/
+
+./ startup.sh
+
+vi /opt/tomcat/webapps/manager/META-INF/context.xml
+do uncomment # for access tomcat authentication
+ <!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+  <Manager sessionAttributeValueClassNameFilter="java\.lang\.(?:Boolean|Integer|Long|Number|String)|org\.apache\.catalina\.filters\.CsrfPreventionFilter\$LruCache(?:\$1)?|java\.util\.(?:Linked)?HashMap"/> -->
+
+sudo vi /opt/tomcat/webapps/host-manager/META-INF/context.xml
+<!--  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+  allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
+
+./shutdown.sh
+
+./ startup.sh
+
+cd ..
+
+cd conf/
+
+sudo vi tomcat-users.xml
+<role rolename="admin-gui"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <user username="tomcat" password="admin" roles="admin-gui,manager-gui,manager-script"/>
+
+cd ../bin/
+
+./shutdown.sh
+
+./ startup.sh
+
