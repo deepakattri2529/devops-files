@@ -1,0 +1,61 @@
+#kubectl get nodes
+#kubectl describe node 172.16.25.25
+#kubectl apply -f pod1.yml
+#kubectl get pods
+
+if you want to see where is your pod running(show instance ip and pod ip)
+#kubectl get pod -o wide
+
+#kubectl describe pod podname
+or
+#kubectl describe pod/podname
+
+whats running in pod
+#kubectl logs -f podname
+
+whats runnig in particular container
+#kubectl logs -f podname -c containerName 
+Delete pod
+#kubectl delete pod podname 
+or
+#kubectl delete -f pod1.yml (using pod file name)
+
+To enter in container
+#kubectl exec podname -it -c containername --/bin/bash
+
+To see container ip
+#kubectl exec podname -c containername -- hostname -i
+
+Add label on existing pod
+#kubectl label pods podname myname=anyname
+#kubectl get pods --show-labels
+
+list matching a label
+#kubectl get pods -l env=labelname
+
+
+give a list where xyz label is not present
+#kubectl get pods -l env!=xyz
+
+delete pods using label
+#kubectl delete pod -l env!=labelname
+
+Equity based labels
+=, !=
+
+set based labels
+(in, notin, exists)
+
+#kubectl get pods -l 'env in(development,testing)'
+#kubectl get pods -l 'env notin(development,testing)' 
+#kubectl get pods -l class=pods,myname=deepak
+
+
+#kubectl apply -f pods.yml
+#kubectl label nodes 172.x.x.x hardware=t2-medium
+#kubectl get pods
+
+#kubectl apply -f pods.yml
+#kubectl get rc   (rc means replica controller)
+#kubectl describe rc myreplica
+#kubectl scale --replicas=8 rc -l myname=bhupinder  (adding pods)

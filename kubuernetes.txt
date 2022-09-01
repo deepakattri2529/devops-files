@@ -1,0 +1,332 @@
+sudo su
+apt-get update
+apt-get install apt-transport-https
+
+
+apt install docker.io -y
+docker --version
+systemctl start docker
+systemctl enable docker
+
+sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add 
+
+
+nano /etc/apt/sources.list.d/kubernetes.list
+
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+
+
+apt-get update
+
+apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+
+
+BOOTSTRAPPING THE MASTER NODE (IN MASTER) 	 	
+
+kubeadm init
+ 
+
+COPY THE COMMAND TO RUN IN NODES & SAVE IN NOTEPAD
+
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+
+chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f https://raw.githubusercontent.com/cor...
+
+kubectl apply -f https://raw.githubusercontent.com/cor...
+
+CONFIGURE WORKER NODES (IN NODES)
+
+COPY LONG CODE PROVIDED MY MASTER IN NODE NOW LIKE CODE GIVEN BELOW
+
+e.g- kubeadm join 172.31.6.165:6443 --token kl9fhu.co2n90v3rxtqllrs --discovery-token-ca-cert-hash sha256:b0f8003d23dbf445e0132a53d7aa1922bdef8d553d9eca06e65c928322b3e7c0
+
+GO TO MASTER AND RUN THIS COMMAND
+kubectl get nodes
+
+
+
+
+
+
+
+
+sudo su
+
+Now install docker
+
+#sudo apt update && apt -y install docker.io
+
+install kubectl
+
+curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+
+chmod +x ./kubectl
+
+sudo mv ./kubectl /usr/local/bin/kubectl
+
+kubectl cluster-info
+kubectl version
+
+
+install Kubectl (Alternate command)
+
+#curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64 && chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl
+
+install Minikube
+
+#curl -Lo minikube https://storage.googleapis.com/miniku... && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+
+
+#apt install conntrack
+#minikube start  --vm-driver=none
+#minikube status
+#kubectl version
+
+#kubectl get nodes
+#kubectl describe node 172.16.25.25
+
+
+
+
+ ***************************************************************************
+kind: Pod                              
+apiVersion: v1                     
+metadata:                           
+  name: testpod                  
+spec:                                    
+  containers:                      
+    - name: c00                  
+      image: ubuntu              
+      command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+  restartPolicy: Never         # Defaults to Always
+
+#kubectl apply -f pod1.yml
+#kubectl get pods
+if you want to see where is your pod running
+#kubectl get pod -o wide
+#kubectl describe pod podname
+or
+#kubectl describe pod/podname
+#kubectl logs -f podname
+delete pod
+#kubectl delete pod podname 
+or
+#kubectl delete -f pod1.yml (using pod file name)
+
+
+**************************************************************
+
+kind: Pod                              
+apiVersion: v1                     
+metadata:                           
+  name: testpod
+  annotations:
+	desciption: my description xyz               
+spec:                                    
+  containers:                      
+    - name: c00                  
+      image: ubuntu              
+      command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+  restartPolicy: Never         # Defaults to Always
+
+#kubectl apply -f pod1.yml
+#kubectl get pods
+if you want to see where is your pod running
+#kubectl get pod -o wide
+#kubectl describe pod podname
+or
+#kubectl describe pod/podname
+#kubectl logs -f podname
+delete pod
+#kubectl delete pod podname 
+or
+#kubectl delete -f pod1.yml (using pod file name)
+
+************************************************************************************************************************************
+
+MULTI CONTAINER POD ENVIRONMENT 
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: testpod3
+spec:
+  containers:
+    - name: c00
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+    - name: c01
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+to enter in container
+#kubectl exec podname -it -c containername -- /bin/bash
+#ps
+#ps -ef
+
+to see container ip
+#kubectl exec podname -c containername -- hostname -i
+
+
+*********************************************************************************************************************************
+POD ENVIRONMENT  VARIABLES
+
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: environments
+spec:
+  containers:
+    - name: c00
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+      env:                        # List of environment variables to be used inside the pod
+      - name: MYNAME
+        value: BHUPINDER
+
+#kubectl apply -f pod.yml
+#kubectl get pods
+#kubectl exec enviroments -it -- /bin/bash
+#echo $MYNAME
+
+************************************************************************************************************************************
+POD WITH PORTS
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: testpod4
+spec:
+  containers:
+    - name: c00
+      image: httpd
+      ports:
+       - containerPort: 80  
+
+#kubectl apply -f pod.yml
+#kubectl get pods -o wide
+#curl ip:80
+
+*********************END**************************************************
+Add label on existing pod
+#kubectl label pods podname myname=anyname
+#kubectl get pods --show-labels
+
+list matching a label
+#kubectl get pods -l env=labelname
+
+
+give a list where xyz label is not present
+#kubectl get pods -l env!=xyz
+
+delete pods using label
+#kubectl delete pod -l env!=labelname
+
+#kubectl get pods -l 'env in(development,testing)'
+#kubectl get pods -l 'env notin(development,testing)' 
+#kubectl get pods -l class=pods,myname=deepak
+
+EXAMPLE OF LABELS
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: delhipod
+  labels:                                                   
+    env: development
+    class: pods
+spec:
+    containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+
+
+***************************************************************************
+NODE SELECTOR EXAMPLE
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nodelabels
+  labels:
+    env: development
+spec:
+    containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+    nodeSelector:                                         
+       hardware: t2-medium
+
+#kubectl apply -f pods.yml
+#kubectl label nodes ip-172.x.x.x hardware=t2-medium
+#kubectl get pods
+*****************************************************************************************************
+EXAMPLE OF REPLICATION CONTROLLER
+
+kind: ReplicationController               
+apiVersion: v1
+metadata:
+  name: myreplica
+spec:
+  replicas: 2            
+  selector:        
+    myname: Bhupinder                              
+  template:                
+    metadata:
+      name: testpod6
+      labels:            
+        myname: Bhupinder
+    spec:
+     containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+#kubectl apply -f pods.yml
+#kubectl get rc   (rc means replica controller)
+#kubectl describe rc myreplica
+#kubectl scale --replicas=8 rc -l myname=bhupinder  (adding pods)
+#kubectl get rc
+#kubectl get pods
+
+
+****************************************************************************************************************
+EXAMPLE OF REPLICA SET
+
+
+kind: ReplicaSet                                    
+apiVersion: apps/v1                            
+metadata:
+  name: myrs
+spec:
+  replicas: 2  
+  selector:                  
+    matchExpressions:                             # these must match the labels
+      - {key: myname, operator: In, values: [Bhupinder, Bupinder, Bhopendra]}
+      - {key: env, operator: NotIn, values: [production]}
+  template:      
+    metadata:
+      name: testpod7
+      labels:              
+        myname: Bhupinder
+    spec:
+     containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+
+#kubectl apply -f pod.yml
+#kubectl get rc
+#kubectl get pods
+***************************************END******************************
+
