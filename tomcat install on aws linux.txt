@@ -2,9 +2,11 @@ cd /opt/
 
 sudo dnf install java-17-amazon-corretto-devel
 
-sudo amazon-linux-extras install java-openjdk11 -y
+              sudo amazon-linux-extras install java-openjdk11 -y
 
-sudo wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.60/bin/apache-tomcat-9.0.60.tar.gz
+https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.91/bin/apache-tomcat-9.0.91.tar.gz
+
+              sudo wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.60/bin/apache-tomcat-9.0.60.tar.gz
 
 tar -xvzf apache-tomcat-9.0.60.tar.gz
 
